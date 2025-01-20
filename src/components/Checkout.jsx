@@ -34,13 +34,10 @@ export default function Checkout() {
 
   const cartTotal = cartCtx.items.reduce((totalPrice, item) => totalPrice + item.quantity * item.price, 0);
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    
-    const fd = new FormData(event.target);
+  async function checkoutAction(fd) {
     const customerData = Object.fromEntries(fd.entries()); // { email: test@example.com }
 
-    sendRequest(JSON.stringify({
+    await sendRequest(JSON.stringify({
       order: {
         items: cartCtx.items,
         customer: customerData
@@ -73,7 +70,7 @@ export default function Checkout() {
 
   return (
     <Modal open={userProgressCtx.progress === 'checkout'} onClose={handleClose}>
-      <form onSubmit= {handleSubmit}>
+      <form action= {checkoutAction}>
         <h2>Checkout</h2>
         <p>Total Amount: {currencyFormatter.format(cartTotal)}</p>
 
